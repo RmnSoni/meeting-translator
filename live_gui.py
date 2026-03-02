@@ -13,8 +13,21 @@ from deepgram.core.events import EventType
 from openai import OpenAI
 from concurrent.futures import ThreadPoolExecutor
 
-# Load Env
-load_dotenv()
+# DPI Awareness for Windows
+if sys.platform == "win32":
+    try:
+        import ctypes
+        ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    except Exception:
+        pass
+
+# Handle frozen executable path for .env
+if getattr(sys, 'frozen', False):
+    basedir = sys._MEIPASS
+else:
+    basedir = os.path.dirname(os.path.abspath(__file__))
+
+load_dotenv(os.path.join(basedir, ".env"))
 
 # Constants
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
